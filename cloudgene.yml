@@ -1,0 +1,50 @@
+id: taxprofiler
+name: Taxprofiler
+description: Taxonomic classification and profiling of shotgun short- and long-read metagenomic data
+version: 1.1.8
+website: https://github.com/nf-core/taxprofiler
+author: James A. Fellows Yates, Sofia Stamouli, Moritz E. Beber, and the nf-core/taxprofiler team
+logo: https://raw.githubusercontent.com/nf-core/fetchngs/master/docs/images/nf-core-fetchngs_logo_light.png
+
+workflow:
+  steps:
+    - name: Fetch Data
+      type: nextflow
+      script: nf-core/fetchngs
+      revision: 1.12.0
+      stdout: true
+      params:
+        input: "${input_ids}"
+
+    - name: Run taxprofiler
+      type: nextflow
+      script: nf-core/taxprofiler
+      revision: 1.1.8
+      stdout: true
+      params:
+        input: "${outdir}/samplesheet/samplesheet.csv"
+        databases: "https://raw.githubusercontent.com/nf-core/test-datasets/taxprofiler/database_full_v1.2.csv"
+        multiqc_title: "${CLOUDGENE_JOB_NAME}"
+
+  inputs:
+    - id: input_ids
+      description: IDs
+      type: textarea
+      value: "SRR12696236"
+      writeFile: "ids.csv"
+      serialize: false
+
+    - id: run_kraken2
+      description: Run Kraken2
+      type: checkbox
+      value: true
+
+    - id: run_metaphlan
+      description: Run MetaPhlAn
+      type: checkbox
+      value: false
+
+  outputs:
+    - id: outdir
+      description: Output
+      type: local-folder
