@@ -45,4 +45,4 @@ workflow:
   outputs:
     - id: outdir
       description: Output
-      type: local-folder
+      type: local_folder
